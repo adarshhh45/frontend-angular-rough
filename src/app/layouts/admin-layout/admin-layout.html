@@ -1,0 +1,12 @@
+<mat-toolbar color="primary">
+  <span>Admin Dashboard</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-button routerLink="/user/dashboard">Go to User App</button>
+  <button mat-icon-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="admin-content">
+  <router-outlet></router-outlet>
+</div>

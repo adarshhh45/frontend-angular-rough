@@ -1,0 +1,45 @@
+<div class="history-container">
+  <h1>Your Ticket History</h1>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    <p>Loading your tickets...</p>
+  </div>
+
+  <div *ngIf="!isLoading && tickets.length === 0" class="no-tickets">
+    <mat-icon>no_transportation</mat-icon>
+    <p>You haven't booked any tickets yet.</p>
+    <a mat-raised-button color="primary" routerLink="/user/book-ticket">Book Your First Ticket</a>
+  </div>
+
+  <mat-accordion *ngIf="!isLoading && tickets.length > 0">
+    <mat-expansion-panel *ngFor="let ticket of tickets">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-title">
+          <span>{{ ticket.originStationName }}</span>
+          <mat-icon>arrow_forward</mat-icon>
+          <span>{{ ticket.destinationStationName }}</span>
+        </mat-panel-title>
+        <mat-panel-description>
+          <span>{{ ticket.bookingTime | date:'short' }}</span>
+          <span class="status-chip" [ngClass]="'status-' + ticket.status.toLowerCase()">{{ ticket.status }}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- Expanded Content -->
+      <div class="ticket-details">
+        <div class="details-left">
+          <p><strong>Ticket ID:</strong> {{ ticket.ticketNumber }}</p>
+          <p><strong>Fare:</strong> {{ ticket.fare | currency:'INR' }}</p>
+          <p><strong>Expires:</strong> {{ ticket.expiryTime | date:'medium' }}</p>
+          <p><strong>Type:</strong> {{ ticket.ticketType | titlecase }}</p>
+        </div>
+        <div class="details-right">
+          <p><strong>Your QR Code</strong></p>
+          <img [src]="'data:image/png;base64,' + ticket.qrCodeImage" alt="Ticket QR Code">
+        </div>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

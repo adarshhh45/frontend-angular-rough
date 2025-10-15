@@ -1,0 +1,66 @@
+.history-container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.loading-spinner, .no-tickets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #777;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+}
+
+.panel-title {
+  gap: 10px;
+  align-items: center;
+}
+
+.status-chip {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+}
+
+.status-confirmed { background-color: #3f51b5; } // Blue
+.status-in_transit { background-color: #f57c00; } // Orange
+.status-used { background-color: #4caf50; } // Green
+.status-expired { background-color: #757575; } // Grey
+.status-cancelled { background-color: #f44336; } // Red
+
+.ticket-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 16px 24px;
+}
+
+.details-left p {
+  margin: 0 0 8px 0;
+}
+
+.details-right {
+  text-align: center;
+  img {
+    max-width: 150px;
+    height: auto;
+    border: 1px solid #ccc;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 600px) {
+    .ticket-details {
+        grid-template-columns: 1fr;
+    }
+}

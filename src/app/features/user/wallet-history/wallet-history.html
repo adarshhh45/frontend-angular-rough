@@ -1,0 +1,32 @@
+<div class="history-container">
+  <mat-card class="balance-card">
+    <mat-card-header>
+      <mat-card-title>Current Balance</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="isLoading" class="balance-loading">Loading...</div>
+      <div *ngIf="!isLoading && wallet" class="balance">
+        {{ wallet.balance | currency:'INR' }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <h2>Transaction History</h2>
+
+  <mat-list *ngIf="!isLoading && wallet && wallet.transactions.length > 0">
+    <mat-list-item *ngFor="let tx of wallet.transactions">
+      <mat-icon matListItemIcon [ngClass]="tx.type === 'CREDIT' ? 'credit' : 'debit'">
+        {{ tx.type === 'CREDIT' ? 'arrow_upward' : 'arrow_downward' }}
+      </mat-icon>
+      <div matListItemTitle>{{ tx.type === 'CREDIT' ? 'Amount Added' : 'Ticket Purchase' }}</div>
+      <div matListItemLine>{{ tx.transactionTime | date:'medium' }}</div>
+      <span class="transaction-amount" [ngClass]="tx.type === 'CREDIT' ? 'credit' : 'debit'">
+        {{ (tx.type === 'CREDIT' ? '+' : '-') + (tx.amount | currency:'INR') }}
+      </span>
+    </mat-list-item>
+  </mat-list>
+
+  <div *ngIf="!isLoading && wallet && wallet.transactions.length === 0" class="no-transactions">
+    You have no transactions yet.
+  </div>
+</div>

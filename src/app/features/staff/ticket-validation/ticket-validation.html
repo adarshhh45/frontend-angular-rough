@@ -1,0 +1,45 @@
+<div class="validation-container">
+  <mat-card>
+    <mat-card-title>Ticket Validation</mat-card-title>
+    <mat-card-subtitle>Paste QR code data to validate a ticket</mat-card-subtitle>
+    <mat-card-content>
+      <form [formGroup]="validationForm" (ngSubmit)="onValidate()">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Current Station</mat-label>
+          <mat-select formControlName="stationId">
+            <mat-option *ngFor="let station of (stations$ | async)" [value]="station.stationId">
+              {{ station.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please select the station you are at.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>QR Code Payload</mat-label>
+          <textarea matInput formControlName="qrCodePayload"
+                    placeholder="Paste the JSON data from the QR code here"></textarea>
+          <mat-error>QR code data is required.</mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="validationForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Validate Ticket</span>
+          <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Validation Result Card -->
+  <mat-card *ngIf="validationResult" class="result-card"
+            [ngClass]="validationResult.valid ? 'valid-result' : 'invalid-result'">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>{{ validationResult.valid ? 'check_circle' : 'error' }}</mat-icon>
+      <mat-card-title>{{ validationResult.valid ? 'Validation Successful' : 'Validation Failed' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{ validationResult.message }}</p>
+    </mat-card-content>
+  </mat-card>
+
+</div>

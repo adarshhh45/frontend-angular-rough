@@ -1,0 +1,59 @@
+<div class="station-management-container">
+  <div class="header">
+    <h1>Manage Stations</h1>
+    <button mat-raised-button color="primary" (click)="openStationDialog()">
+      <mat-icon>add</mat-icon>
+      Add Station
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="stations" class="mat-elevation-z8">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let station"> {{station.name}} </td>
+    </ng-container>
+
+    <!-- Code Column -->
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef> Code </th>
+      <td mat-cell *matCellDef="let station"> {{station.code}} </td>
+    </ng-container>
+
+    <!-- Order Column -->
+    <ng-container matColumnDef="order">
+      <th mat-header-cell *matHeaderCellDef> Order </th>
+      <td mat-cell *matCellDef="let station"> {{station.stationOrder}} </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let station">
+            <span [ngClass]="station.active ? 'status-active' : 'status-inactive'">
+                {{ station.active ? 'Active' : 'Inactive' }}
+            </span>
+        </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let station">
+        <button mat-icon-button color="primary" (click)="openStationDialog(station)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button *ngIf="station.active" mat-icon-button color="warn" (click)="toggleStationStatus(station.stationId, false)">
+            <mat-icon>toggle_off</mat-icon>
+        </button>
+        <button *ngIf="!station.active" mat-icon-button color="accent" (click)="toggleStationStatus(station.stationId, true)">
+            <mat-icon>toggle_on</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

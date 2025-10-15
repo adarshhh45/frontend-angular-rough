@@ -1,0 +1,32 @@
+.history-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.balance-card {
+  margin-bottom: 24px;
+}
+
+.balance {
+  font-size: 2.2rem;
+  font-weight: 500;
+}
+
+.transaction-amount {
+  font-weight: bold;
+}
+
+.credit {
+  color: green;
+}
+
+.debit {
+  color: red;
+}
+
+.no-transactions {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-style: italic;
+}

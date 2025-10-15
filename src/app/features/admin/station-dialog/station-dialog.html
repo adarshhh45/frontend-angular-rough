@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>{{ data ? 'Edit Station' : 'Add New Station' }}</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="stationForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Station Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g., Central Park">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Station Code</mat-label>
+      <input matInput formControlName="code" placeholder="e.g., CPK">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Station Order</mat-label>
+      <input matInput type="number" formControlName="stationOrder" placeholder="e.g., 1">
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="stationForm.invalid" (click)="onSave()">Save</button>
+</div>

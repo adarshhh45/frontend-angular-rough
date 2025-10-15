@@ -1,0 +1,47 @@
+<div class="login-container">
+  <mat-card>
+    <mat-card-title>Metro System Login</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <!-- Role Selection -->
+        <mat-radio-group formControlName="role" class="role-selector" color="primary">
+          <mat-radio-button value="USER">User / Staff</mat-radio-button>
+          <mat-radio-button value="ADMIN">Admin</mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="Enter your email" required>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" placeholder="Enter your password" required>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+        </mat-form-field>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Login</span>
+            <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <div class="extra-actions">
+    <span>Don't have an account? <a routerLink="/auth/register">Sign Up</a></span>
+  </div>
+</div>

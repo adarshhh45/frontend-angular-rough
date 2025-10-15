@@ -1,0 +1,61 @@
+<div class="booking-container">
+  <mat-card>
+    <mat-card-title>Book a New Ticket</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+
+        <!-- Station Selection -->
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>From Station</mat-label>
+            <mat-select formControlName="originId">
+              <mat-option *ngFor="let station of (stations$ | async)" [value]="station.stationId">
+                {{ station.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>Please select a starting station.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>To Station</mat-label>
+            <mat-select formControlName="destId">
+              <mat-option *ngFor="let station of (stations$ | async)" [value]="station.stationId">
+                {{ station.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>Please select a destination.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Ticket Type Selection -->
+        <label class="form-label">Ticket Type</label>
+        <mat-radio-group formControlName="ticketType" color="primary" class="radio-group">
+          <mat-radio-button value="ONE_WAY">One-Way</mat-radio-button>
+          <mat-radio-button value="RETURN">Return</mat-radio-button>
+          <mat-radio-button value="DAY_PASS">Day Pass</mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Fare Display -->
+        <div class="fare-display" *ngIf="(fare$ | async) as calculatedFare">
+          <h3>Total Fare: <span>{{ calculatedFare | currency:'INR' }}</span></h3>
+        </div>
+        
+        <!-- Payment Method Selection -->
+        <label class="form-label">Payment Method</label>
+        <mat-radio-group formControlName="paymentMethod" color="primary" class="radio-group">
+          <mat-radio-button value="WALLET">Wallet</mat-radio-button>
+          <mat-radio-button value="UPI" [disabled]="true">UPI / Card (Coming Soon)</mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="bookingForm.invalid || isLoading">
+                <span *ngIf="!isLoading">Book Ticket</span>
+                <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
+            </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

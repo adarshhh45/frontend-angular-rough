@@ -1,0 +1,27 @@
+<div class="verify-container">
+  <mat-card>
+    <mat-card-title>Verify Your Account</mat-card-title>
+    <mat-card-subtitle>An OTP has been sent to <strong>{{ userEmail }}</strong>. Please enter it below.</mat-card-subtitle>
+    <mat-card-content>
+      <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="outline">
+          <mat-label>6-Digit OTP</mat-label>
+          <input matInput formControlName="otpCode" placeholder="Enter your OTP" required>
+          <mat-error *ngIf="verifyForm.get('otpCode')?.hasError('required')">OTP is required</mat-error>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="verifyForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Verify & Login</span>
+            <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
