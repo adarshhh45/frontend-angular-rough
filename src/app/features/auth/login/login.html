@@ -24,7 +24,7 @@
           <input matInput formControlName="password" type="password" placeholder="Enter your password" required>
           <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
         </mat-form-field>
-
+        
         <!-- Error Message -->
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
@@ -41,7 +41,11 @@
       </form>
     </mat-card-content>
   </mat-card>
-  <div class="extra-actions">
-    <span>Don't have an account? <a routerLink="/auth/register">Sign Up</a></span>
+
+  <!-- ALL LINKS ARE NOW OUTSIDE AND AFTER THE CARD -->
+  <div class="auth-links">
+    <a class="auth-link" routerLink="/auth/forgot-password">Forgot Password?</a>
+    <a class="auth-link" routerLink="/auth/register">Don't have an account? Sign Up</a>
   </div>
+
 </div>

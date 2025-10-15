@@ -46,4 +46,27 @@ mat-progress-spinner {
   margin-top: 24px; 
   text-align: center;
   font-size: 14px;
+
+a {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.auth-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-link {
+  font-size: 14px;
+  text-decoration: none;
+  color: #3f51b5;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

@@ -19,6 +19,12 @@ export interface JwtResponse {
   refreshToken: string;
 }
 
+export interface ResetPasswordRequest {
+  email: string;
+  otpCode: string;
+  newPassword: string;
+}
+
 const AUTH_API = `${environment.apiUrl}/auth/`;
 
 const httpOptions = {
@@ -39,18 +45,27 @@ export class AuthService {
     if (role === 'ADMIN') {
       loginUrl = AUTH_API + 'admin/login';
     } else {
-      // This endpoint handles both USER and STAFF roles
       loginUrl = AUTH_API + 'user/login';
     }
 
     return this.http.post(loginUrl, credentials, httpOptions);
   }
 
+
   register(signUpRequest: SignUpRequest): Observable<string> {
-    return this.http.post<string>(AUTH_API + 'register', signUpRequest);
+    //tell HttpClient to expect a plain text response
+    return this.http.post(AUTH_API + 'register', signUpRequest, { responseType: 'text' });
   }
 
   verifyOtp(verifyRequest: VerifyOtpRequest): Observable<JwtResponse> {
     return this.http.post<JwtResponse>(AUTH_API + 'verify-otp', verifyRequest);
+  }
+
+  forgotPassword(email: string): Observable<string> {
+    return this.http.post(AUTH_API + 'forgot-password', { email }, { responseType: 'text' });
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<string> {
+    return this.http.post(AUTH_API + 'reset-password', request, { responseType: 'text' });
   }
 }
