@@ -6,6 +6,7 @@
   height: 100vh;
   background-color: #f5f5f5;
 }
+
 mat-card {
   width: 100%;
   max-width: 400px;
@@ -42,8 +43,22 @@ mat-progress-spinner {
   display: inline-block;
 }
 
-.extra-actions {
-  margin-top: 24px;
-  text-align: center;
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px; 
+  margin-top: 24px; 
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-link {
   font-size: 14px;
+  text-decoration: none;
+  color: #3f51b5; // Angular Material primary color
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

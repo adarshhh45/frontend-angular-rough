@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth'; // Corrected Path
-import { TokenStorage } from '../../../core/services/token-storage'; // Corrected Path
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth'; 
+import { TokenStorage } from '../../../core/services/token-storage';
 
-// Angular Material Imports
+
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -49,8 +50,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.tokenStorage.getAccessToken()) {
-      // Potentially redirect if already logged in
-      // For now, we'll keep it simple
     }
   }
 
