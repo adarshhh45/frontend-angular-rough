@@ -12,7 +12,7 @@
     <a mat-raised-button color="primary" routerLink="/user/book-ticket">Book Your First Ticket</a>
   </div>
 
-  <mat-accordion *ngIf="!isLoading && tickets.length > 0">
+  <mat-accordion *ngIf="!isLoading && tickets.length > 0" multi>
     <mat-expansion-panel *ngFor="let ticket of tickets">
       <mat-expansion-panel-header>
         <mat-panel-title class="panel-title">
@@ -39,6 +39,14 @@
           <img [src]="'data:image/png;base64,' + ticket.qrCodeImage" alt="Ticket QR Code">
         </div>
       </div>
+
+      <!-- ADD THIS ACTIONS ROW -->
+      <mat-action-row *ngIf="ticket.status === 'CONFIRMED'">
+        <button mat-stroked-button color="warn" (click)="onCancelTicket(ticket.ticketId, $event)" [disabled]="cancellingTicketId === ticket.ticketId">
+          <span *ngIf="cancellingTicketId !== ticket.ticketId">Cancel Ticket</span>
+          <span *ngIf="cancellingTicketId === ticket.ticketId">Cancelling...</span>
+        </button>
+      </mat-action-row>
 
     </mat-expansion-panel>
   </mat-accordion>

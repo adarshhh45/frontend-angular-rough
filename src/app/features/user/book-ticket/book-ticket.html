@@ -42,10 +42,11 @@
         
         <!-- Payment Method Selection -->
         <label class="form-label">Payment Method</label>
-        <mat-radio-group formControlName="paymentMethod" color="primary" class="radio-group">
-          <mat-radio-button value="WALLET">Wallet</mat-radio-button>
-          <mat-radio-button value="UPI" [disabled]="true">UPI / Card (Coming Soon)</mat-radio-button>
-        </mat-radio-group>
+<mat-radio-group formControlName="paymentMethod" color="primary" class="radio-group">
+  <mat-radio-button value="WALLET">Wallet</mat-radio-button>
+  <!-- REMOVE the [disabled]="true" attribute from the line below -->
+  <mat-radio-button value="UPI">UPI / Card</mat-radio-button>
+</mat-radio-group>
 
         <!-- Actions -->
         <div class="actions">
