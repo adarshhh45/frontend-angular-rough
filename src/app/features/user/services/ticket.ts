@@ -32,4 +32,7 @@ export class TicketService {
   getTicketHistory(): Observable<Ticket[]> {
     return this.http.get<Ticket[]>(this.apiUrl);
   }
+  cancelTicket(ticketId: number): Observable<Ticket> {
+    return this.http.post<Ticket>(`${this.apiUrl}/${ticketId}/cancel`, {});
+  }
 }
