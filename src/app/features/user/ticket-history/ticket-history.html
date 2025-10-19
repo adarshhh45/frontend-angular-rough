@@ -40,14 +40,25 @@
         </div>
       </div>
 
-      <!-- ADD THIS ACTIONS ROW -->
-      <mat-action-row *ngIf="ticket.status === 'CONFIRMED'">
-        <button mat-stroked-button color="warn" (click)="onCancelTicket(ticket.ticketId, $event)" [disabled]="cancellingTicketId === ticket.ticketId">
+      <mat-action-row>
+        <button mat-button color="primary" 
+                (click)="onDownloadTicketPdf(ticket, $event)" 
+                [disabled]="downloadingTicketId === ticket.ticketId">
+          <mat-icon>download</mat-icon>
+          <span *ngIf="downloadingTicketId !== ticket.ticketId">Download Ticket</span>
+          <span *ngIf="downloadingTicketId === ticket.ticketId">Downloading...</span>
+        </button>
+        
+        <span class="action-spacer"></span>
+
+        <button *ngIf="ticket.status === 'CONFIRMED'" 
+                mat-stroked-button color="warn" 
+                (click)="onCancelTicket(ticket.ticketId, $event)" 
+                [disabled]="cancellingTicketId === ticket.ticketId">
           <span *ngIf="cancellingTicketId !== ticket.ticketId">Cancel Ticket</span>
           <span *ngIf="cancellingTicketId === ticket.ticketId">Cancelling...</span>
         </button>
       </mat-action-row>
-
     </mat-expansion-panel>
   </mat-accordion>
 </div>

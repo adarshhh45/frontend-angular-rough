@@ -14,14 +14,11 @@ export interface UpiPaymentRequest {
   providedIn: 'root'
 })
 export class UpiService {
-  // Note that the endpoint is `/api/v1/upi/pay`
   private apiUrl = `${environment.apiUrl}/upi`;
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Initiates a UPI payment for a ticket by creating a Razorpay order.
-   */
+  
   initiateUpiPayment(request: UpiPaymentRequest): Observable<WalletRechargeResponse> {
     return this.http.post<WalletRechargeResponse>(`${this.apiUrl}/pay`, request);
   }

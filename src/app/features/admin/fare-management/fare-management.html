@@ -1,0 +1,53 @@
+<div class="fare-management-container">
+  <div class="header">
+    <h1>Manage Fare Slabs</h1>
+    <button mat-raised-button color="primary" (click)="openFareDialog()">
+      <mat-icon>add</mat-icon>
+      Add Slab
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">Loading...</div>
+
+  <table mat-table [dataSource]="fareSlabs" class="mat-elevation-z8" *ngIf="!isLoading">
+
+    <!-- Min Stations Column -->
+    <ng-container matColumnDef="minStations">
+      <th mat-header-cell *matHeaderCellDef> Min Stations </th>
+      <td mat-cell *matCellDef="let slab"> {{slab.minStations}} </td>
+    </ng-container>
+
+    <!-- Max Stations Column -->
+    <ng-container matColumnDef="maxStations">
+      <th mat-header-cell *matHeaderCellDef> Max Stations </th>
+      <td mat-cell *matCellDef="let slab"> {{slab.maxStations}} </td>
+    </ng-container>
+
+    <!-- Fare Column -->
+    <ng-container matColumnDef="fare">
+      <th mat-header-cell *matHeaderCellDef> Fare </th>
+      <td mat-cell *matCellDef="let slab"> {{slab.fare | currency:'INR'}} </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let slab">
+        <button mat-icon-button color="primary" (click)="openFareDialog(slab)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(slab)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div *ngIf="!isLoading && fareSlabs.length === 0" class="no-data">
+    No fare slabs found.
+  </div>
+</div>```
+

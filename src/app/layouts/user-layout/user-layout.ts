@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
-// Material Imports
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';

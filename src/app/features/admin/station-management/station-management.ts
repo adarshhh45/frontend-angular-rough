@@ -57,7 +57,6 @@ export class StationManagementComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (station) {
-          // This is an update
           this.adminService.updateStation(station.stationId, result).subscribe({
             next: () => {
               this.snackBar.open('Station updated successfully!', 'Close', { duration: 3000 });
@@ -66,7 +65,6 @@ export class StationManagementComponent implements OnInit {
             error: () => this.snackBar.open('Failed to update station', 'Close', { duration: 3000 })
           });
         } else {
-          // This is a new station
           this.adminService.addStation(result).subscribe({
             next: () => {
               this.snackBar.open('Station added successfully!', 'Close', { duration: 3000 });

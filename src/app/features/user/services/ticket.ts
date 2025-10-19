@@ -35,4 +35,10 @@ export class TicketService {
   cancelTicket(ticketId: number): Observable<Ticket> {
     return this.http.post<Ticket>(`${this.apiUrl}/${ticketId}/cancel`, {});
   }
+
+  downloadTicketQr(ticketId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${ticketId}/download`, {
+      responseType: 'blob' // Important: We expect a binary file, not JSON
+    });
+  }
 }

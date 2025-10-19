@@ -87,7 +87,7 @@ export class Dashboard implements OnInit {
       order_id: response.razorpayOrderId,
       handler: (res: any) => {
         this.snackBar.open('Recharge successful!', 'Close', { duration: 4000 });
-        this.loadWallet(); //refresh wallet balance
+        this.loadWallet(); 
       },
       prefill: {
         name: this.user.name,

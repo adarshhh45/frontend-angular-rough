@@ -62,7 +62,6 @@ export class ProfileComponent implements OnInit {
     }
     const file = input.files[0];
 
-    // Validate file type and size
     if (!['image/jpeg', 'image/png'].includes(file.type)) {
       this.snackBar.open('Invalid file type. Only PNG and JPEG are allowed.', 'Close', { duration: 3000 });
       return;
@@ -74,7 +73,6 @@ export class ProfileComponent implements OnInit {
 
     this.isUploading = true;
 
-    // Step 1: Get signature from our backend
     this.profileService.getCloudinarySignature().subscribe({
       next: (sig) => this.uploadToCloudinary(file, sig),
       error: () => {
@@ -85,7 +83,6 @@ export class ProfileComponent implements OnInit {
   }
 
   private uploadToCloudinary(file: File, sig: CloudinarySignature): void {
-    // Step 2: Upload directly to Cloudinary
     const formData = new FormData();
     formData.append('file', file);
     formData.append('api_key', sig.apiKey);

@@ -6,6 +6,18 @@
     <mat-icon>logout</mat-icon>
   </button>
 </mat-toolbar>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+  <a mat-tab-link routerLink="stations" routerLinkActive="active">
+    Station Management
+  </a>
+  <a mat-tab-link routerLink="fares" routerLinkActive="active">
+    Fare Management
+  </a>
+   <a mat-tab-link routerLink="reports" routerLinkActive="active">
+    Sales Reports
+  </a>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
 <div class="admin-content">
   <router-outlet></router-outlet>

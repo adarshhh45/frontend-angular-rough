@@ -5,10 +5,10 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Station } from '../../user/services/station';
+import { FareSlab } from '../services/admin';
 
 @Component({
-  selector: 'app-station-dialog',
+  selector: 'app-fare-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -18,21 +18,21 @@ import { Station } from '../../user/services/station';
     MatInputModule,
     MatButtonModule
   ],
-  templateUrl: './station-dialog.html',
-  styleUrls: ['./station-dialog.scss']
+  templateUrl: './fare-dialog.html',
+  styleUrls: ['./fare-dialog.scss']
 })
-export class StationDialogComponent {
-  stationForm: FormGroup;
+export class FareDialogComponent {
+  fareForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<StationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Station | null
+    public dialogRef: MatDialogRef<FareDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: FareSlab | null
   ) {
-    this.stationForm = this.fb.group({
-      name: [data?.name || '', Validators.required],
-      code: [data?.code || '', Validators.required],
-      stationOrder: [data?.stationOrder || null, [Validators.required, Validators.min(1)]]
+    this.fareForm = this.fb.group({
+      minStations: [data?.minStations || null, [Validators.required, Validators.min(0)]],
+      maxStations: [data?.maxStations || null, [Validators.required, Validators.min(1)]],
+      fare: [data?.fare || null, [Validators.required, Validators.min(5)]]
     });
   }
 
@@ -41,8 +41,8 @@ export class StationDialogComponent {
   }
 
   onSave(): void {
-    if (this.stationForm.valid) {
-      this.dialogRef.close(this.stationForm.value);
+    if (this.fareForm.valid) {
+      this.dialogRef.close(this.fareForm.value);
     }
   }
 }

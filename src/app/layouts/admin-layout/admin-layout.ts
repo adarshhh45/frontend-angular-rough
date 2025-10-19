@@ -5,6 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TokenStorage } from '../../core/services/token-storage';
+import { MatTabsModule } from '@angular/material/tabs'; // IMPORT THIS
 
 @Component({
   selector: 'app-admin-layout',
@@ -15,7 +16,8 @@ import { TokenStorage } from '../../core/services/token-storage';
     RouterLink,
     MatToolbarModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTabsModule 
   ],
   templateUrl: './admin-layout.html',
   styleUrls: ['./admin-layout.scss']
