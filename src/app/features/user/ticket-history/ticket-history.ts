@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, TitleCasePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { TicketService } from '../services/ticket';
 import { Ticket } from '../models/ticket';
+
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-ticket-history',
@@ -23,6 +25,10 @@ import { Ticket } from '../models/ticket';
     MatButtonModule,
     MatSnackBarModule
   ],
+  providers: [
+    DatePipe,  
+    CurrencyPipe   
+  ],
   templateUrl: './ticket-history.html',
   styleUrls: ['./ticket-history.scss']
 })
@@ -30,10 +36,13 @@ export class TicketHistory implements OnInit {
   tickets: Ticket[] = [];
   isLoading = true;
   cancellingTicketId: number | null = null;
+   downloadingTicketId: number | null = null;
 
   constructor(
     private ticketService: TicketService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private datePipe: DatePipe,
+    private currencyPipe: CurrencyPipe
   ) { }
 
   ngOnInit(): void {
@@ -55,7 +64,7 @@ export class TicketHistory implements OnInit {
   }
 
   onCancelTicket(ticketId: number, event: Event): void {
-    event.stopPropagation(); // Prevent the expansion panel from toggling
+    event.stopPropagation(); 
     
     if (!confirm('Are you sure you want to cancel this ticket? The fare will be refunded to your wallet.')) {
       return;
@@ -64,7 +73,6 @@ export class TicketHistory implements OnInit {
     this.cancellingTicketId = ticketId;
     this.ticketService.cancelTicket(ticketId).subscribe({
       next: (updatedTicket) => {
-        // Find the ticket in the local array and update its status
         const index = this.tickets.findIndex(t => t.ticketId === ticketId);
         if (index > -1) {
           this.tickets[index] = { ...this.tickets[index], status: updatedTicket.status };
@@ -78,5 +86,58 @@ export class TicketHistory implements OnInit {
         this.cancellingTicketId = null;
       }
     });
+  }
+  onDownloadTicketPdf(ticket: Ticket, event: Event): void {
+    event.stopPropagation();
+    this.downloadingTicketId = ticket.ticketId;
+
+    try {
+      const doc = new jsPDF();
+
+      // 1. Add Header
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.text('Metro E-Ticket', 105, 20, { align: 'center' });
+      doc.setLineWidth(0.5);
+      doc.line(15, 25, 195, 25);
+
+      // 2. Add Journey Details
+      doc.setFontSize(16);
+      doc.text(`${ticket.originStationName} to ${ticket.destinationStationName}`, 15, 40);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+
+      // 3. Add Ticket Info
+      const bookingTime = this.datePipe.transform(ticket.bookingTime, 'medium');
+      const expiryTime = this.datePipe.transform(ticket.expiryTime, 'medium');
+      const fare = this.currencyPipe.transform(ticket.fare, 'INR');
+
+      doc.text(`Ticket ID: ${ticket.ticketNumber}`, 15, 55);
+      doc.text(`Fare: ${fare}`, 15, 65);
+      doc.text(`Type: ${ticket.ticketType.replace('_', ' ')}`, 15, 75);
+      doc.text(`Booked On: ${bookingTime}`, 15, 85);
+      doc.text(`Expires On: ${expiryTime}`, 15, 95);
+
+      // 4. Add QR Code
+      doc.setFont('helvetica', 'bold');
+      doc.text('Your QR Code', 155, 50, { align: 'center' });
+      const qrImage = `data:image/png;base64,${ticket.qrCodeImage}`;
+      doc.addImage(qrImage, 'PNG', 125, 55, 60, 60);
+
+      // 5. Add Footer
+      doc.line(15, 125, 195, 125);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'italic');
+      doc.text('Please show this QR code at the entry and exit gates.', 105, 135, { align: 'center' });
+
+      // 6. Save the PDF
+      doc.save(`ticket-${ticket.ticketNumber}.pdf`);
+
+    } catch (error) {
+      this.snackBar.open('Failed to generate PDF ticket.', 'Close', { duration: 3000 });
+    } finally {
+      this.downloadingTicketId = null;
+    }
   }
 }

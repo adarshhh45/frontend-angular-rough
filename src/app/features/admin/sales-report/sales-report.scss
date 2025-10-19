@@ -1,0 +1,41 @@
+.report-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.report-form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.report-display {
+  margin-top: 24px;
+}
+
+.report-content {
+  display: flex;
+  gap: 32px;
+  padding-top: 16px;
+}
+
+.report-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.report-label {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+}
+
+.report-value {
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.2;
+
+  &.revenue {
+    color: #388e3c; // A green color
+  }
+}
