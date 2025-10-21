@@ -12,6 +12,7 @@ import { Ticket } from '../models/ticket';
 
 import { jsPDF } from 'jspdf';
 import { MatChip, MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-ticket-history',
@@ -20,6 +21,7 @@ import { MatChip, MatChipsModule } from '@angular/material/chips';
     CommonModule,
     TitleCasePipe,
     RouterLink,
+    MatCardModule,
     MatChipsModule,
     MatExpansionModule,
     MatIconModule,

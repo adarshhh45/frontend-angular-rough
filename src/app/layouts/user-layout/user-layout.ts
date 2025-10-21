@@ -1,15 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TokenStorage } from '../../core/services/token-storage';
 
 @Component({
@@ -19,17 +20,21 @@ import { TokenStorage } from '../../core/services/token-storage';
     CommonModule,
     RouterOutlet,
     RouterLink,
+    RouterLinkActive,
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule
   ],
   templateUrl: './user-layout.html',
   styleUrls: ['./user-layout.scss']
 })
-export class UserLayoutComponent {
+export class UserLayoutComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
+  
+  user: any;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -38,6 +43,10 @@ export class UserLayoutComponent {
     );
 
   constructor(private tokenStorage: TokenStorage, private router: Router) {}
+
+  ngOnInit(): void {
+    this.user = this.tokenStorage.getUser();
+  }
 
   logout(): void {
     this.tokenStorage.signOut();

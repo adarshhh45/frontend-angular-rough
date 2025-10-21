@@ -2,7 +2,8 @@ export interface WalletTransaction {
   transactionId: number;
   amount: number;
   type: 'CREDIT' | 'DEBIT';
-  transactionTime: string; // ISO date string
+  transactionTime: string; 
+  description?: string;
 }
 
 export interface Wallet {

@@ -1,32 +1,70 @@
-<div class="history-container">
-  <mat-card class="balance-card">
-    <mat-card-header>
-      <mat-card-title>Current Balance</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div *ngIf="isLoading" class="balance-loading">Loading...</div>
-      <div *ngIf="!isLoading && wallet" class="balance">
-        {{ wallet.balance | currency:'INR' }}
+<div class="wallet-wrapper fade-in">
+  <div class="wallet-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <mat-icon class="header-icon">account_balance_wallet</mat-icon>
+        <div>
+          <h1 class="page-title">My Wallet</h1>
+          <p class="page-subtitle">Track your balance and transaction history</p>
+        </div>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
 
-  <h2>Transaction History</h2>
+    <!-- Balance Card -->
+    <mat-card class="balance-card">
+        <div class="balance-content">
+            <p class="balance-label">Current Balance</p>
+            <div *ngIf="isLoading" class="balance-loading">
+                <div class="skeleton-loader"></div>
+            </div>
+            <h2 *ngIf="!isLoading && wallet" class="balance-amount">
+                {{ wallet.balance | currency:'INR' }}
+            </h2>
+        </div>
+        <div class="balance-actions">
+            <button mat-raised-button color="primary" routerLink="/user/book-ticket">
+                <mat-icon>subway</mat-icon>
+                <span>Book Ticket</span>
+            </button>
+        </div>
+    </mat-card>
 
-  <mat-list *ngIf="!isLoading && wallet && wallet.transactions.length > 0">
-    <mat-list-item *ngFor="let tx of wallet.transactions">
-      <mat-icon matListItemIcon [ngClass]="tx.type === 'CREDIT' ? 'credit' : 'debit'">
-        {{ tx.type === 'CREDIT' ? 'arrow_upward' : 'arrow_downward' }}
-      </mat-icon>
-      <div matListItemTitle>{{ tx.type === 'CREDIT' ? 'Amount Added' : 'Ticket Purchase' }}</div>
-      <div matListItemLine>{{ tx.transactionTime | date:'medium' }}</div>
-      <span class="transaction-amount" [ngClass]="tx.type === 'CREDIT' ? 'credit' : 'debit'">
-        {{ (tx.type === 'CREDIT' ? '+' : '-') + (tx.amount | currency:'INR') }}
-      </span>
-    </mat-list-item>
-  </mat-list>
+    <!-- Transaction History Section -->
+    <div class="section">
+        <h2 class="section-title">
+            <mat-icon>receipt_long</mat-icon>
+            Transaction History
+        </h2>
 
-  <div *ngIf="!isLoading && wallet && wallet.transactions.length === 0" class="no-transactions">
-    You have no transactions yet.
+        <div *ngIf="isLoading" class="loading-container">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
+
+        <mat-card class="history-card" *ngIf="!isLoading && wallet">
+            <div *ngIf="wallet.transactions.length === 0" class="empty-state">
+                <mat-icon class="empty-icon">history_toggle_off</mat-icon>
+                <h3>No Transactions Yet</h3>
+                <p>Your recharges and ticket purchases will appear here.</p>
+            </div>
+
+            <mat-list *ngIf="wallet.transactions.length > 0">
+                <mat-list-item *ngFor="let tx of wallet.transactions" class="transaction-item">
+                    <div matListItemIcon class="transaction-icon" [ngClass]="tx.type.toLowerCase()">
+                        <mat-icon>{{ tx.type === 'CREDIT' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+                    </div>
+                    <div class="transaction-content">
+                        <p class="transaction-title">{{ tx.description || (tx.type === 'CREDIT' ? 'Wallet Recharge' : 'Ticket Purchase') }}</p>
+                        <p class="transaction-time">{{ tx.transactionTime | date:'medium' }}</p>
+                    </div>
+                    <div class="transaction-amount" [ngClass]="tx.type.toLowerCase()">
+                        {{ (tx.type === 'CREDIT' ? '+' : '-') + (tx.amount | currency:'INR') }}
+                    </div>
+                </mat-list-item>
+            </mat-list>
+        </mat-card>
+    </div>
+
   </div>
 </div>

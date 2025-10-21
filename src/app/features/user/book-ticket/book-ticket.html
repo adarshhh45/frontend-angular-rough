@@ -20,7 +20,7 @@
           <!-- Journey Section -->
           <div class="form-section">
             <h3 class="section-title">
-              <mat-icon>location_on</mat-icon>
+              <mat-icon>route</mat-icon>
               Journey Details
             </h3>
             
@@ -39,10 +39,10 @@
               </div>
 
               <div class="journey-swap">
-                <button mat-mini-fab color="primary" type="button" class="swap-button" 
+                <button mat-icon-button color="primary" type="button" class="swap-button" 
                         matTooltip="Swap stations"
                         (click)="swapStations()">
-                  <mat-icon>swap_vert</mat-icon>
+                  <mat-icon>swap_horiz</mat-icon>
                 </button>
               </div>
 
@@ -69,47 +69,25 @@
             </h3>
             
             <mat-radio-group formControlName="ticketType" class="ticket-type-selector">
-              <div class="ticket-option">
-                <mat-radio-button value="ONE_WAY" color="primary">
-                  <div class="ticket-option-content">
-                    <div class="ticket-icon">
-                      <mat-icon>arrow_forward</mat-icon>
-                    </div>
-                    <div class="ticket-info">
-                      <span class="ticket-name">One-Way</span>
-                      <span class="ticket-desc">Single journey ticket</span>
-                    </div>
+              <mat-radio-button value="ONE_WAY" color="primary">
+                <div class="ticket-option-content">
+                  <div class="ticket-icon"><mat-icon>arrow_forward</mat-icon></div>
+                  <div class="ticket-info">
+                    <span class="ticket-name">One-Way</span>
+                    <span class="ticket-desc">Single journey ticket</span>
                   </div>
-                </mat-radio-button>
-              </div>
+                </div>
+              </mat-radio-button>
 
-              <div class="ticket-option">
-                <mat-radio-button value="RETURN" color="primary">
-                  <div class="ticket-option-content">
-                    <div class="ticket-icon">
-                      <mat-icon>sync_alt</mat-icon>
-                    </div>
-                    <div class="ticket-info">
-                      <span class="ticket-name">Return</span>
-                      <span class="ticket-desc">Round trip ticket</span>
-                    </div>
+              <mat-radio-button value="RETURN" color="primary">
+                <div class="ticket-option-content">
+                  <div class="ticket-icon"><mat-icon>sync_alt</mat-icon></div>
+                  <div class="ticket-info">
+                    <span class="ticket-name">Return</span>
+                    <span class="ticket-desc">Round trip ticket</span>
                   </div>
-                </mat-radio-button>
-              </div>
-
-              <div class="ticket-option">
-                <mat-radio-button value="DAY_PASS" color="primary">
-                  <div class="ticket-option-content">
-                    <div class="ticket-icon">
-                      <mat-icon>all_inclusive</mat-icon>
-                    </div>
-                    <div class="ticket-info">
-                      <span class="ticket-name">Day Pass</span>
-                      <span class="ticket-desc">Unlimited travel</span>
-                    </div>
-                  </div>
-                </mat-radio-button>
-              </div>
+                </div>
+              </mat-radio-button>
             </mat-radio-group>
           </div>
 
@@ -121,24 +99,19 @@
             </h3>
             
             <mat-radio-group formControlName="paymentMethod" class="payment-selector">
-              <div class="payment-option">
-                <mat-radio-button value="WALLET" color="primary">
-                  <div class="payment-option-content">
-                    <mat-icon>account_balance_wallet</mat-icon>
-                    <span>Metro Wallet</span>
-                    <mat-chip class="recommended-chip">Recommended</mat-chip>
-                  </div>
-                </mat-radio-button>
-              </div>
+              <mat-radio-button value="WALLET" color="primary">
+                <div class="payment-option-content">
+                  <mat-icon>account_balance_wallet</mat-icon>
+                  <span>Metro Wallet</span>
+                </div>
+              </mat-radio-button>
 
-              <div class="payment-option">
-                <mat-radio-button value="UPI" color="primary">
-                  <div class="payment-option-content">
-                    <mat-icon>credit_card</mat-icon>
-                    <span>UPI / Card</span>
-                  </div>
-                </mat-radio-button>
-              </div>
+              <mat-radio-button value="UPI" color="primary">
+                <div class="payment-option-content">
+                  <mat-icon>credit_card</mat-icon>
+                  <span>UPI / Card</span>
+                </div>
+              </mat-radio-button>
             </mat-radio-group>
           </div>
 
@@ -150,24 +123,20 @@
               <mat-icon>check_circle</mat-icon>
               <span>Book Ticket</span>
             </span>
-            <mat-progress-spinner *ngIf="isLoading" 
-                                  mode="indeterminate" 
-                                  diameter="24">
-            </mat-progress-spinner>
+            <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
           </button>
-
         </form>
       </mat-card>
 
       <!-- Fare Summary Card -->
       <div class="summary-section">
-        <mat-card class="fare-card" *ngIf="(fare$ | async) as calculatedFare">
+        <mat-card class="fare-card" [class.loading]="(fare$ | async) === null">
           <h3 class="fare-title">
-            <mat-icon>receipt</mat-icon>
+            <mat-icon>receipt_long</mat-icon>
             Fare Summary
           </h3>
           
-          <div class="fare-details">
+          <div class="fare-details" *ngIf="(fare$ | async) as calculatedFare; else fareLoading">
             <div class="fare-row">
               <span>Base Fare</span>
               <span>{{ calculatedFare | currency:'INR' }}</span>
@@ -182,36 +151,14 @@
               <span class="total-amount">{{ calculatedFare | currency:'INR' }}</span>
             </div>
           </div>
-
-          <div class="fare-info">
-            <mat-icon>info</mat-icon>
-            <p>Your ticket will be valid for 24 hours from the time of booking.</p>
-          </div>
-        </mat-card>
-
-        <!-- Info Card -->
-        <mat-card class="info-card">
-          <h3 class="info-title">
-            <mat-icon>help_outline</mat-icon>
-            Booking Guidelines
-          </h3>
-          <ul class="info-list">
-            <li>
-              <mat-icon>check</mat-icon>
-              <span>Tickets are non-refundable after validation</span>
-            </li>
-            <li>
-              <mat-icon>check</mat-icon>
-              <span>Keep your QR code ready for scanning</span>
-            </li>
-            <li>
-              <mat-icon>check</mat-icon>
-              <span>Day pass is valid for 24 hours</span>
-            </li>
-          </ul>
+          <ng-template #fareLoading>
+            <div class="fare-placeholder">
+              <mat-icon>hourglass_top</mat-icon>
+              <p>Select your journey to see the fare.</p>
+            </div>
+          </ng-template>
         </mat-card>
       </div>
     </div>
-
   </div>
 </div>
