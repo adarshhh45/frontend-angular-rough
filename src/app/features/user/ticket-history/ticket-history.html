@@ -1,64 +1,156 @@
-<div class="history-container">
-  <h1>Your Ticket History</h1>
-
-  <div *ngIf="isLoading" class="loading-spinner">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    <p>Loading your tickets...</p>
-  </div>
-
-  <div *ngIf="!isLoading && tickets.length === 0" class="no-tickets">
-    <mat-icon>no_transportation</mat-icon>
-    <p>You haven't booked any tickets yet.</p>
-    <a mat-raised-button color="primary" routerLink="/user/book-ticket">Book Your First Ticket</a>
-  </div>
-
-  <mat-accordion *ngIf="!isLoading && tickets.length > 0" multi>
-    <mat-expansion-panel *ngFor="let ticket of tickets">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="panel-title">
-          <span>{{ ticket.originStationName }}</span>
-          <mat-icon>arrow_forward</mat-icon>
-          <span>{{ ticket.destinationStationName }}</span>
-        </mat-panel-title>
-        <mat-panel-description>
-          <span>{{ ticket.bookingTime | date:'short' }}</span>
-          <span class="status-chip" [ngClass]="'status-' + ticket.status.toLowerCase()">{{ ticket.status }}</span>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <!-- Expanded Content -->
-      <div class="ticket-details">
-        <div class="details-left">
-          <p><strong>Ticket ID:</strong> {{ ticket.ticketNumber }}</p>
-          <p><strong>Fare:</strong> {{ ticket.fare | currency:'INR' }}</p>
-          <p><strong>Expires:</strong> {{ ticket.expiryTime | date:'medium' }}</p>
-          <p><strong>Type:</strong> {{ ticket.ticketType | titlecase }}</p>
-        </div>
-        <div class="details-right">
-          <p><strong>Your QR Code</strong></p>
-          <img [src]="'data:image/png;base64,' + ticket.qrCodeImage" alt="Ticket QR Code">
+<div class="history-wrapper fade-in">
+  <div class="history-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <mat-icon class="header-icon">receipt_long</mat-icon>
+        <div>
+          <h1 class="page-title">My Tickets</h1>
+          <p class="page-subtitle">View and manage your bookings</p>
         </div>
       </div>
+      <button mat-raised-button color="primary" routerLink="/user/book-ticket">
+        <mat-icon>add</mat-icon>
+        Book New Ticket
+      </button>
+    </div>
 
-      <mat-action-row>
-        <button mat-button color="primary" 
-                (click)="onDownloadTicketPdf(ticket, $event)" 
-                [disabled]="downloadingTicketId === ticket.ticketId">
-          <mat-icon>download</mat-icon>
-          <span *ngIf="downloadingTicketId !== ticket.ticketId">Download Ticket</span>
-          <span *ngIf="downloadingTicketId === ticket.ticketId">Downloading...</span>
-        </button>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
+      <p>Loading your tickets...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && tickets.length === 0" class="empty-state">
+      <div class="empty-illustration">
+        <mat-icon>confirmation_number</mat-icon>
+      </div>
+      <h2>No Tickets Found</h2>
+      <p>You haven't booked any tickets yet. Start your journey now!</p>
+      <button mat-raised-button color="primary" routerLink="/user/book-ticket">
+        <mat-icon>add_circle</mat-icon>
+        Book Your First Ticket
+      </button>
+    </div>
+
+    <!-- Tickets List -->
+    <div *ngIf="!isLoading && tickets.length > 0" class="tickets-grid">
+      <mat-card *ngFor="let ticket of tickets" class="ticket-card" 
+                [ngClass]="'status-' + ticket.status.toLowerCase()">
         
-        <span class="action-spacer"></span>
+        <!-- Status Badge -->
+        <div class="ticket-status-badge" [ngClass]="'badge-' + ticket.status.toLowerCase()">
+          <mat-icon>{{ getStatusIcon(ticket.status) }}</mat-icon>
+          <span>{{ ticket.status | titlecase }}</span>
+        </div>
 
-        <button *ngIf="ticket.status === 'CONFIRMED'" 
-                mat-stroked-button color="warn" 
-                (click)="onCancelTicket(ticket.ticketId, $event)" 
-                [disabled]="cancellingTicketId === ticket.ticketId">
-          <span *ngIf="cancellingTicketId !== ticket.ticketId">Cancel Ticket</span>
-          <span *ngIf="cancellingTicketId === ticket.ticketId">Cancelling...</span>
-        </button>
-      </mat-action-row>
-    </mat-expansion-panel>
-  </mat-accordion>
+        <!-- Ticket Header -->
+        <div class="ticket-header">
+          <div class="route-info">
+            <div class="station origin">
+              <mat-icon>trip_origin</mat-icon>
+              <div class="station-details">
+                <span class="station-name">{{ ticket.originStationName }}</span>
+                <span class="station-label">From</span>
+              </div>
+            </div>
+            
+            <div class="route-line">
+              <div class="line"></div>
+              <mat-icon class="route-icon">train</mat-icon>
+              <div class="line"></div>
+            </div>
+            
+            <div class="station destination">
+              <mat-icon>place</mat-icon>
+              <div class="station-details">
+                <span class="station-name">{{ ticket.destinationStationName }}</span>
+                <span class="station-label">To</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ticket Details -->
+        <div class="ticket-details">
+          <div class="detail-row">
+            <mat-icon>confirmation_number</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Ticket ID</span>
+              <span class="detail-value">{{ ticket.ticketNumber }}</span>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <mat-icon>event</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Booked On</span>
+              <span class="detail-value">{{ ticket.bookingTime | date:'medium' }}</span>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <mat-icon>schedule</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Valid Until</span>
+              <span class="detail-value">{{ ticket.expiryTime | date:'medium' }}</span>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <mat-icon>local_offer</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Ticket Type</span>
+              <span class="detail-value">{{ ticket.ticketType | titlecase }}</span>
+            </div>
+          </div>
+
+          <div class="detail-row fare-row">
+            <mat-icon>payments</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Fare Paid</span>
+              <span class="detail-value fare">{{ ticket.fare | currency:'INR' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR Code Section -->
+        <div class="qr-section">
+          <div class="qr-header">
+            <mat-icon>qr_code_2</mat-icon>
+            <span>Scan at Entry/Exit</span>
+          </div>
+          <div class="qr-code-wrapper">
+            <img [src]="'data:image/png;base64,' + ticket.qrCodeImage" 
+                 alt="Ticket QR Code"
+                 class="qr-code">
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="ticket-actions">
+          <button mat-stroked-button color="primary"
+                  (click)="onDownloadTicketPdf(ticket, $event)" 
+                  [disabled]="downloadingTicketId === ticket.ticketId">
+            <mat-icon>download</mat-icon>
+            <span *ngIf="downloadingTicketId !== ticket.ticketId">Download</span>
+            <span *ngIf="downloadingTicketId === ticket.ticketId">Downloading...</span>
+          </button>
+          
+          <button *ngIf="ticket.status === 'CONFIRMED'" 
+                  mat-stroked-button color="warn"
+                  (click)="onCancelTicket(ticket.ticketId, $event)" 
+                  [disabled]="cancellingTicketId === ticket.ticketId">
+            <mat-icon>cancel</mat-icon>
+            <span *ngIf="cancellingTicketId !== ticket.ticketId">Cancel</span>
+            <span *ngIf="cancellingTicketId === ticket.ticketId">Cancelling...</span>
+          </button>
+        </div>
+
+      </mat-card>
+    </div>
+
+  </div>
 </div>

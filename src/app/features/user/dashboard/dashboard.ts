@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {MatListModule} from '@angular/material/list';
 
 import { WalletService } from '../services/wallet';
 import { TokenStorage } from '../../../core/services/token-storage';
@@ -20,6 +21,7 @@ import { RechargeDialogComponent } from '../recharge-dialog/recharge-dialog';
     RouterLink,
     MatCardModule,
     MatButtonModule,
+    MatListModule,
     MatIconModule,
     MatSnackBarModule,
     MatDialogModule 

@@ -21,6 +21,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-book-ticket',
@@ -35,7 +39,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatButtonModule,
     MatRadioModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatTooltipModule
   ],
   templateUrl: './book-ticket.html',
   styleUrls: ['./book-ticket.scss']
@@ -45,7 +53,7 @@ export class BookTicketComponent implements OnInit {
   stations$!: Observable<Station[]>;
   fare$ = new Subject<number | null>();
   isLoading = false;
-  errorMessage: string | null = null;
+  errorMessage = '';
   user: any;
 
   private stationService = inject(StationService);
@@ -74,6 +82,19 @@ export class BookTicketComponent implements OnInit {
       })
     );
     this.setupFareCalculationListener();
+  }
+
+  // New method to swap stations
+  swapStations(): void {
+    const originId = this.bookingForm.get('originId')?.value;
+    const destId = this.bookingForm.get('destId')?.value;
+    
+    if (originId && destId) {
+      this.bookingForm.patchValue({
+        originId: destId,
+        destId: originId
+      });
+    }
   }
 
   private setupFareCalculationListener(): void {
@@ -107,7 +128,7 @@ export class BookTicketComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
+    this.errorMessage = '';
     const { paymentMethod } = this.bookingForm.value;
 
     if (paymentMethod === 'WALLET') {
@@ -128,13 +149,19 @@ export class BookTicketComponent implements OnInit {
       catchError(err => {
         this.errorMessage = err.error?.error?.message || 'An unknown booking error occurred.';
         this.isLoading = false;
+        this.snackBar.open(this.errorMessage, 'Close', { duration: 4000 });
         return of(null);
       })
     ).subscribe((ticket: Ticket | null) => {
       this.isLoading = false;
       if (ticket) {
-        this.snackBar.open('Ticket booked successfully!', 'OK', { duration: 3000 });
-        this.router.navigate(['/user/ticket-history']);
+        this.snackBar.open('🎉 Ticket booked successfully!', 'View', { duration: 4000 })
+          .onAction().subscribe(() => {
+            this.router.navigate(['/user/ticket-history']);
+          });
+        setTimeout(() => {
+          this.router.navigate(['/user/ticket-history']);
+        }, 2000);
       }
     });
   }
@@ -153,6 +180,7 @@ export class BookTicketComponent implements OnInit {
       error: (err) => {
         this.errorMessage = err.error?.error?.message || 'Failed to initiate UPI payment.';
         this.isLoading = false;
+        this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
       }
     });
   }
@@ -174,7 +202,7 @@ export class BookTicketComponent implements OnInit {
         email: this.user.email || ''
       },
       theme: {
-        color: '#3F51B5'
+        color: '#667eea'
       },
       modal: {
         ondismiss: () => {

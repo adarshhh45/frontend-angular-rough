@@ -11,6 +11,7 @@ import { TicketService } from '../services/ticket';
 import { Ticket } from '../models/ticket';
 
 import { jsPDF } from 'jspdf';
+import { MatChip, MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-ticket-history',
@@ -19,6 +20,7 @@ import { jsPDF } from 'jspdf';
     CommonModule,
     TitleCasePipe,
     RouterLink,
+    MatChipsModule,
     MatExpansionModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -47,6 +49,17 @@ export class TicketHistory implements OnInit {
 
   ngOnInit(): void {
     this.loadTicketHistory();
+  }
+
+  getStatusIcon(status: string): string {
+  const iconMap: { [key: string]: string } = {
+    'CONFIRMED': 'check_circle',
+    'IN_TRANSIT': 'sync',
+    'USED': 'done_all',
+    'EXPIRED': 'schedule',
+    'CANCELLED': 'cancel'
+  };
+  return iconMap[status] || 'info';
   }
 
   loadTicketHistory(): void {

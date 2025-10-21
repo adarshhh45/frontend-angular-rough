@@ -5,13 +5,13 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth'; 
 import { TokenStorage } from '../../../core/services/token-storage';
 
-
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +25,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatInputModule,
     MatButtonModule,
     MatRadioModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatIconModule
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
@@ -50,6 +52,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.tokenStorage.getAccessToken()) {
+      // User already logged in, redirect based on role
+      const userRole = this.tokenStorage.getRole();
+      this.redirectBasedOnRole(userRole);
     }
   }
 
@@ -67,19 +72,22 @@ export class LoginComponent implements OnInit {
         this.tokenStorage.saveToken(data.accessToken);
         this.isLoading = false;
         const userRole = this.tokenStorage.getRole();
-
-        if (userRole === 'ADMIN') {
-            this.router.navigate(['/admin']);
-        } else if (userRole === 'STAFF') {
-            this.router.navigate(['/staff']);
-        } else {
-            this.router.navigate(['/user']);
-        }
+        this.redirectBasedOnRole(userRole);
       },
       error: err => {
         this.errorMessage = err.error?.error?.message || err.error?.message || 'Login failed. Please check your credentials.';
         this.isLoading = false;
       }
     });
+  }
+
+  private redirectBasedOnRole(role: string | null): void {
+    if (role === 'ADMIN') {
+      this.router.navigate(['/admin']);
+    } else if (role === 'STAFF') {
+      this.router.navigate(['/staff']);
+    } else {
+      this.router.navigate(['/user']);
+    }
   }
 }
