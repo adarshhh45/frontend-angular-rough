@@ -1,33 +1,90 @@
-<div class="profile-container">
-  <mat-card *ngIf="!isLoading && user">
-    <mat-card-header>
-      <div class="avatar-container">
-        <img mat-card-avatar [src]="user.profileImageUrl || 'https://via.placeholder.com/96'" alt="Profile Picture" class="profile-avatar">
-        <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/png, image/jpeg">
-        <button mat-icon-button class="upload-button" (click)="fileInput.click()" [disabled]="isUploading || isDeleting">
-          <mat-icon>photo_camera</mat-icon>
-        </button>
-        <div *ngIf="isUploading" class="upload-spinner">
-          <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+<div class="profile-wrapper fade-in">
+  <div class="profile-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <mat-icon class="header-icon">manage_accounts</mat-icon>
+        <div>
+          <h1 class="page-title">My Profile</h1>
+          <p class="page-subtitle">Manage your account settings and personal information</p>
         </div>
       </div>
-      <mat-card-title>{{ user.name }}</mat-card-title>
-      <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Update your profile picture by clicking the camera icon.</p>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-stroked-button color="warn" (click)="openDeleteDialog()" [disabled]="isDeleting || isUploading">
-        <mat-icon>delete_forever</mat-icon>
-        <span *ngIf="!isDeleting">Delete Account</span>
-        <span *ngIf="isDeleting">Deleting...</span>
-      </button>
-    </mat-card-actions>
-  </mat-card>
+    </div>
 
-  <div *ngIf="isLoading" class="loading-spinner">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    <p>Loading Profile...</p>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      <p>Loading Profile...</p>
+    </div>
+
+    <div *ngIf="!isLoading && user" class="profile-content">
+      <!-- Profile Picture Card -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Profile Picture</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="avatar-content">
+          <div class="avatar-container">
+            <img [src]="user.profileImageUrl || 'https://via.placeholder.com/128'" alt="Profile Picture" class="profile-avatar">
+            <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/png, image/jpeg">
+            <button mat-fab color="primary" class="upload-button" (click)="fileInput.click()" [disabled]="isUploading || isDeleting">
+              <mat-icon>photo_camera</mat-icon>
+            </button>
+            <div *ngIf="isUploading" class="upload-spinner">
+              <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
+            </div>
+          </div>
+          <div class="avatar-instructions">
+            <p>For best results, upload a square image in .png or .jpg format, under 2MB.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Personal Details Card -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Personal Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="profileForm" (ngSubmit)="onSaveName()">
+            <mat-form-field appearance="outline">
+              <mat-label>Email Address</mat-label>
+              <input matInput [value]="user.email" readonly>
+              <mat-icon matPrefix>email</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="name">
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+            
+            <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid || isSavingName || user.name === profileForm.value.name">
+                <span *ngIf="!isSavingName">Save Changes</span>
+                <mat-progress-spinner *ngIf="isSavingName" mode="indeterminate" diameter="24"></mat-progress-spinner>
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Danger Zone Card -->
+      <mat-card class="danger-zone-card">
+        <mat-card-header>
+          <mat-card-title>Danger Zone</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="danger-zone-content">
+          <div class="danger-text">
+            <h4>Delete This Account</h4>
+            <p>Once you delete your account, there is no going back. Please be certain.</p>
+          </div>
+          <button mat-stroked-button color="warn" (click)="openDeleteDialog()" [disabled]="isDeleting || isUploading">
+            <mat-icon>delete_forever</mat-icon>
+            <span>Delete Account</span>
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
   </div>
 </div>

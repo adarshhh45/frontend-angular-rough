@@ -22,10 +22,10 @@
           <div class="skeleton-loader"></div>
         </div>
         <h2 *ngIf="!isLoading && wallet" class="stat-value">
-          {{ wallet.balance | currency:'INR':'symbol':'1.0-0' }}
+          {{ wallet.balance | currency:'INR' }}
         </h2>
         <button mat-stroked-button color="primary" class="stat-action" (click)="openRechargeDialog()">
-          <mat-icon>add</mat-icon>
+          <mat-icon>add_circle_outline</mat-icon>
           Recharge
         </button>
       </div>
@@ -78,35 +78,13 @@
         <mat-icon class="action-arrow">arrow_forward</mat-icon>
       </mat-card>
 
-      <mat-card class="action-card" routerLink="/user/ticket-history">
+      <mat-card class="action-card" (click)="openRechargeDialog()">
         <div class="action-icon">
-          <mat-icon>history</mat-icon>
+          <mat-icon>add_card</mat-icon>
         </div>
         <div class="action-content">
-          <h3>My Tickets</h3>
-          <p>View your booking history</p>
-        </div>
-        <mat-icon class="action-arrow">arrow_forward</mat-icon>
-      </mat-card>
-
-      <mat-card class="action-card" routerLink="/user/wallet">
-        <div class="action-icon">
-          <mat-icon>account_balance</mat-icon>
-        </div>
-        <div class="action-content">
-          <h3>Wallet</h3>
-          <p>Manage your transactions</p>
-        </div>
-        <mat-icon class="action-arrow">arrow_forward</mat-icon>
-      </mat-card>
-
-      <mat-card class="action-card" routerLink="/user/profile">
-        <div class="action-icon">
-          <mat-icon>person</mat-icon>
-        </div>
-        <div class="action-content">
-          <h3>Profile</h3>
-          <p>Update your information</p>
+          <h3>Recharge Wallet</h3>
+          <p>Add funds for quick booking</p>
         </div>
         <mat-icon class="action-arrow">arrow_forward</mat-icon>
       </mat-card>
@@ -126,40 +104,16 @@
             <mat-icon>{{ tx.type === 'CREDIT' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
           </div>
           <div matListItemTitle class="activity-title">
-            {{ tx.type === 'CREDIT' ? 'Wallet Recharged' : 'Ticket Purchased' }}
+            {{ tx.description || (tx.type === 'CREDIT' ? 'Wallet Recharged' : 'Ticket Purchased') }}
           </div>
           <div matListItemLine class="activity-time">
-            {{ tx.transactionTime | date:'short' }}
+            {{ tx.transactionTime | date:'medium' }}
           </div>
           <div class="activity-amount" [ngClass]="tx.type === 'CREDIT' ? 'credit' : 'debit'">
-            {{ (tx.type === 'CREDIT' ? '+' : '-') + (tx.amount | currency:'INR':'symbol':'1.0-0') }}
+            {{ (tx.type === 'CREDIT' ? '+' : '-') + (tx.amount | currency:'INR') }}
           </div>
         </mat-list-item>
       </mat-list>
-    </mat-card>
-  </div>
-
-  <!-- Tips Section -->
-  <div class="section tips-section">
-    <mat-card class="tips-card">
-      <div class="tips-header">
-        <mat-icon>lightbulb</mat-icon>
-        <h3>Quick Tips</h3>
-      </div>
-      <ul class="tips-list">
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Book tickets in advance to avoid queues</span>
-        </li>
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Keep your wallet recharged for quick bookings</span>
-        </li>
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Download your ticket QR code for offline use</span>
-        </li>
-      </ul>
     </mat-card>
   </div>
 </div>

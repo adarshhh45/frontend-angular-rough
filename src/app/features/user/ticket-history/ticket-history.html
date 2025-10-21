@@ -7,10 +7,10 @@
         <mat-icon class="header-icon">receipt_long</mat-icon>
         <div>
           <h1 class="page-title">My Tickets</h1>
-          <p class="page-subtitle">View and manage your bookings</p>
+          <p class="page-subtitle">View and manage your past and active bookings</p>
         </div>
       </div>
-      <button mat-raised-button color="primary" routerLink="/user/book-ticket">
+      <button mat-raised-button color="primary" routerLink="/user/book-ticket" class="hide-mobile">
         <mat-icon>add</mat-icon>
         Book New Ticket
       </button>
@@ -18,19 +18,16 @@
 
     <!-- Loading State -->
     <div *ngIf="isLoading" class="loading-container">
-      <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
       <p>Loading your tickets...</p>
     </div>
 
     <!-- Empty State -->
     <div *ngIf="!isLoading && tickets.length === 0" class="empty-state">
-      <div class="empty-illustration">
-        <mat-icon>confirmation_number</mat-icon>
-      </div>
+      <mat-icon class="empty-icon">confirmation_number</mat-icon>
       <h2>No Tickets Found</h2>
       <p>You haven't booked any tickets yet. Start your journey now!</p>
       <button mat-raised-button color="primary" routerLink="/user/book-ticket">
-        <mat-icon>add_circle</mat-icon>
         Book Your First Ticket
       </button>
     </div>
@@ -40,114 +37,67 @@
       <mat-card *ngFor="let ticket of tickets" class="ticket-card" 
                 [ngClass]="'status-' + ticket.status.toLowerCase()">
         
-        <!-- Status Badge -->
-        <div class="ticket-status-badge" [ngClass]="'badge-' + ticket.status.toLowerCase()">
-          <mat-icon>{{ getStatusIcon(ticket.status) }}</mat-icon>
-          <span>{{ ticket.status | titlecase }}</span>
-        </div>
-
-        <!-- Ticket Header -->
+        <!-- Ticket Header with Journey Info -->
         <div class="ticket-header">
           <div class="route-info">
-            <div class="station origin">
-              <mat-icon>trip_origin</mat-icon>
-              <div class="station-details">
-                <span class="station-name">{{ ticket.originStationName }}</span>
-                <span class="station-label">From</span>
-              </div>
-            </div>
-            
+            <span class="station-code">{{ ticket.originStationName | slice:0:3 | uppercase }}</span>
             <div class="route-line">
-              <div class="line"></div>
               <mat-icon class="route-icon">train</mat-icon>
-              <div class="line"></div>
             </div>
-            
-            <div class="station destination">
-              <mat-icon>place</mat-icon>
-              <div class="station-details">
-                <span class="station-name">{{ ticket.destinationStationName }}</span>
-                <span class="station-label">To</span>
-              </div>
-            </div>
+            <span class="station-code">{{ ticket.destinationStationName | slice:0:3 | uppercase }}</span>
+          </div>
+          <div class="route-names">
+            <span>{{ ticket.originStationName }}</span>
+            <span>{{ ticket.destinationStationName }}</span>
           </div>
         </div>
+        
+        <!-- Separator -->
+        <div class="ticket-separator"></div>
 
         <!-- Ticket Details -->
-        <div class="ticket-details">
-          <div class="detail-row">
-            <mat-icon>confirmation_number</mat-icon>
-            <div class="detail-content">
-              <span class="detail-label">Ticket ID</span>
-              <span class="detail-value">{{ ticket.ticketNumber }}</span>
+        <div class="ticket-body">
+            <div class="qr-code-wrapper">
+                <img [src]="'data:image/png;base64,' + ticket.qrCodeImage" alt="Ticket QR Code" class="qr-code">
+                <span class="ticket-id">{{ ticket.ticketNumber }}</span>
             </div>
-          </div>
-
-          <div class="detail-row">
-            <mat-icon>event</mat-icon>
-            <div class="detail-content">
-              <span class="detail-label">Booked On</span>
-              <span class="detail-value">{{ ticket.bookingTime | date:'medium' }}</span>
+            <div class="ticket-details">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Booked On</span>
+                        <span class="detail-value">{{ ticket.bookingTime | date:'medium' }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Valid Until</span>
+                        <span class="detail-value">{{ ticket.expiryTime | date:'medium' }}</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Fare Paid</span>
+                        <span class="detail-value fare">{{ ticket.fare | currency:'INR' }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value status-badge" [ngClass]="'badge-' + ticket.status.toLowerCase()">
+                           {{ ticket.status | titlecase }}
+                        </span>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <div class="detail-row">
-            <mat-icon>schedule</mat-icon>
-            <div class="detail-content">
-              <span class="detail-label">Valid Until</span>
-              <span class="detail-value">{{ ticket.expiryTime | date:'medium' }}</span>
-            </div>
-          </div>
-
-          <div class="detail-row">
-            <mat-icon>local_offer</mat-icon>
-            <div class="detail-content">
-              <span class="detail-label">Ticket Type</span>
-              <span class="detail-value">{{ ticket.ticketType | titlecase }}</span>
-            </div>
-          </div>
-
-          <div class="detail-row fare-row">
-            <mat-icon>payments</mat-icon>
-            <div class="detail-content">
-              <span class="detail-label">Fare Paid</span>
-              <span class="detail-value fare">{{ ticket.fare | currency:'INR' }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- QR Code Section -->
-        <div class="qr-section">
-          <div class="qr-header">
-            <mat-icon>qr_code_2</mat-icon>
-            <span>Scan at Entry/Exit</span>
-          </div>
-          <div class="qr-code-wrapper">
-            <img [src]="'data:image/png;base64,' + ticket.qrCodeImage" 
-                 alt="Ticket QR Code"
-                 class="qr-code">
-          </div>
         </div>
 
         <!-- Action Buttons -->
-        <div class="ticket-actions">
-          <button mat-stroked-button color="primary"
-                  (click)="onDownloadTicketPdf(ticket, $event)" 
-                  [disabled]="downloadingTicketId === ticket.ticketId">
+        <mat-card-actions class="ticket-actions">
+          <button mat-stroked-button (click)="onDownloadTicketPdf(ticket, $event)" [disabled]="downloadingTicketId === ticket.ticketId">
             <mat-icon>download</mat-icon>
-            <span *ngIf="downloadingTicketId !== ticket.ticketId">Download</span>
-            <span *ngIf="downloadingTicketId === ticket.ticketId">Downloading...</span>
+            <span>{{ downloadingTicketId === ticket.ticketId ? 'Downloading...' : 'Download' }}</span>
           </button>
-          
-          <button *ngIf="ticket.status === 'CONFIRMED'" 
-                  mat-stroked-button color="warn"
-                  (click)="onCancelTicket(ticket.ticketId, $event)" 
-                  [disabled]="cancellingTicketId === ticket.ticketId">
+          <button *ngIf="ticket.status === 'CONFIRMED'" mat-stroked-button color="warn" (click)="onCancelTicket(ticket.ticketId, $event)" [disabled]="cancellingTicketId === ticket.ticketId">
             <mat-icon>cancel</mat-icon>
-            <span *ngIf="cancellingTicketId !== ticket.ticketId">Cancel</span>
-            <span *ngIf="cancellingTicketId === ticket.ticketId">Cancelling...</span>
+            <span>{{ cancellingTicketId === ticket.ticketId ? 'Cancelling...' : 'Cancel' }}</span>
           </button>
-        </div>
+        </mat-card-actions>
 
       </mat-card>
     </div>

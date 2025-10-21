@@ -1,7 +1,5 @@
 .booking-wrapper {
-  min-height: calc(100vh - 64px);
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 24px;
+  padding: 32px;
 }
 
 .booking-container {
@@ -12,38 +10,30 @@
 // Page Header
 .page-header {
   margin-bottom: 32px;
-  
   .header-content {
     display: flex;
     align-items: center;
     gap: 16px;
-    
     .header-icon {
-      width: 56px;
-      height: 56px;
-      font-size: 56px;
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
       color: var(--primary-color);
-      background: rgba(33, 150, 243, 0.1);
-      border-radius: 50%;
-      padding: 12px;
     }
-    
     .page-title {
       font-size: 28px;
       font-weight: 700;
-      color: var(--text-primary);
       margin: 0;
     }
-    
     .page-subtitle {
-      font-size: 14px;
+      font-size: 16px;
       color: var(--text-secondary);
       margin: 4px 0 0 0;
     }
   }
 }
 
-// Booking Content Layout
+// Layout
 .booking-content {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -51,35 +41,23 @@
   align-items: start;
 }
 
-// Booking Card
 .booking-card {
   padding: 32px !important;
-  border-radius: 16px !important;
-  box-shadow: var(--shadow-md) !important;
+  border: 1px solid var(--border-color) !important;
 }
 
 // Form Sections
 .form-section {
   margin-bottom: 32px;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-  
   .section-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
-    color: var(--text-primary);
     margin: 0 0 20px 0;
     display: flex;
     align-items: center;
     gap: 10px;
-    
     mat-icon {
       color: var(--primary-color);
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
     }
   }
 }
@@ -92,256 +70,109 @@
   align-items: center;
 }
 
-.station-field {
-  mat-form-field {
-    width: 100%;
+.journey-swap .swap-button {
+  background: white;
+  border: 1px solid var(--border-color);
+  box-shadow: none !important;
+  transition: all 0.3s ease;
+  &:hover {
+    transform: rotate(180deg);
+    background: var(--bg-tertiary);
   }
 }
 
-.journey-swap {
+// Custom Radio Button Groups
+.ticket-type-selector, .payment-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  .mat-mdc-radio-button {
+    width: 100%;
+    .mdc-form-field { width: 100%; }
+    label {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mdc-radio { display: none; } // Hide the actual radio button circle
+  }
+
+  .ticket-option-content, .payment-option-content {
+    padding: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .mat-mdc-radio-checked .ticket-option-content,
+  .mat-mdc-radio-checked .payment-option-content {
+    border-color: var(--primary-color);
+    background: rgba(33, 150, 243, 0.05);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  }
+}
+
+// Ticket Type Specifics
+.ticket-type-selector .ticket-option-content {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding-top: 8px;
-  
-  .swap-button {
-    box-shadow: var(--shadow-sm) !important;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: rotate(180deg);
-      box-shadow: var(--shadow-md) !important;
-    }
+  gap: 16px;
+  .ticket-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    mat-icon { color: var(--primary-color); }
+  }
+  .ticket-info {
+    .ticket-name { font-weight: 600; }
+    .ticket-desc { font-size: 13px; color: var(--text-secondary); }
   }
 }
 
-// Ticket Type Selector
-.ticket-type-selector {
+// Payment Selector Specifics
+.payment-selector .payment-option-content {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 12px;
-  
-  .ticket-option {
-    mat-radio-button {
-      width: 100%;
-      
-      ::ng-deep .mdc-radio {
-        display: none;
-      }
-      
-      ::ng-deep .mdc-form-field {
-        width: 100%;
-      }
-      
-      ::ng-deep label {
-        width: 100%;
-        padding: 0;
-        margin: 0;
-      }
-      
-      .ticket-option-content {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 16px 20px;
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        background: white;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        
-        .ticket-icon {
-          width: 48px;
-          height: 48px;
-          border-radius: 12px;
-          background: rgba(33, 150, 243, 0.1);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s ease;
-          
-          mat-icon {
-            color: var(--primary-color);
-            font-size: 24px;
-            width: 24px;
-            height: 24px;
-          }
-        }
-        
-        .ticket-info {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          
-          .ticket-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-          }
-          
-          .ticket-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-          }
-        }
-        
-        &:hover {
-          border-color: var(--primary-color);
-          background: rgba(33, 150, 243, 0.02);
-          transform: translateX(4px);
-        }
-      }
-      
-      &.mat-mdc-radio-checked .ticket-option-content {
-        border-color: var(--primary-color);
-        background: rgba(33, 150, 243, 0.08);
-        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
-        
-        .ticket-icon {
-          background: var(--primary-color);
-          
-          mat-icon {
-            color: white;
-          }
-        }
-        
-        .ticket-info .ticket-name {
-          color: var(--primary-color);
-        }
-      }
-    }
-  }
+  font-weight: 500;
+  mat-icon { color: var(--text-secondary); }
 }
 
-// Payment Selector
-.payment-selector {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  
-  .payment-option {
-    mat-radio-button {
-      width: 100%;
-      
-      ::ng-deep .mdc-radio {
-        display: none;
-      }
-      
-      ::ng-deep .mdc-form-field {
-        width: 100%;
-      }
-      
-      ::ng-deep label {
-        width: 100%;
-        padding: 0;
-        margin: 0;
-      }
-      
-      .payment-option-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        padding: 20px 16px;
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        background: white;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        position: relative;
-        
-        mat-icon {
-          font-size: 32px;
-          width: 32px;
-          height: 32px;
-          color: var(--text-secondary);
-          transition: all 0.3s ease;
-        }
-        
-        span {
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-        
-        .recommended-chip {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-          font-size: 10px;
-          height: 20px;
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          color: white;
-        }
-        
-        &:hover {
-          border-color: var(--primary-color);
-          background: rgba(33, 150, 243, 0.04);
-        }
-      }
-      
-      &.mat-mdc-radio-checked .payment-option-content {
-        border-color: var(--primary-color);
-        background: rgba(33, 150, 243, 0.08);
-        
-        mat-icon {
-          color: var(--primary-color);
-        }
-        
-        span {
-          color: var(--primary-color);
-        }
-      }
-    }
-  }
+.payment-selector .mat-mdc-radio-checked .payment-option-content {
+  mat-icon { color: var(--primary-color); }
 }
 
 // Book Button
 .book-button {
   width: 100%;
-  height: 56px !important;
+  height: 48px !important;
   font-size: 16px !important;
-  font-weight: 600 !important;
-  border-radius: 12px !important;
-  margin-top: 24px;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4) !important;
-  
+  margin-top: 16px;
   .button-content {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 8px;
-    
-    mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-    }
-  }
-  
-  &:hover:not([disabled]) {
-    box-shadow: 0 6px 16px rgba(33, 150, 243, 0.5) !important;
-    transform: translateY(-2px);
   }
 }
 
 // Summary Section
 .summary-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
   position: sticky;
-  top: 24px;
+  top: 100px;
 }
 
-// Fare Card
 .fare-card {
   padding: 24px !important;
-  border-radius: 16px !important;
-  background: linear-gradient(135deg, #667eea, #764ba2) !important;
-  color: white;
-  box-shadow: var(--shadow-lg) !important;
-  
+  border: 1px solid var(--border-color) !important;
+  transition: all 0.3s ease;
+
   .fare-title {
     font-size: 18px;
     font-weight: 600;
@@ -349,160 +180,51 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    
-    mat-icon {
-      color: white;
-    }
+    mat-icon { color: var(--primary-color); }
   }
-  
-  .fare-details {
-    .fare-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      font-size: 14px;
-      
-      &.total {
-        font-size: 16px;
-        font-weight: 600;
-        padding-top: 16px;
-        
-        .total-amount {
-          font-size: 24px;
-          font-weight: 700;
-        }
-      }
-    }
-    
-    mat-divider {
-      background-color: rgba(255, 255, 255, 0.3);
-      margin: 8px 0;
-    }
-  }
-  
-  .fare-info {
+
+  .fare-details .fare-row {
     display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
-    
-    mat-icon {
-      flex-shrink: 0;
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
+    justify-content: space-between;
+    padding: 12px 0;
+    font-size: 15px;
+    &.total {
+      font-weight: 700;
+      font-size: 18px;
+      .total-amount { font-size: 24px; }
     }
-    
-    p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.5;
-    }
+  }
+
+  mat-divider { margin: 8px 0; }
+
+  .fare-placeholder {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    mat-icon { font-size: 40px; width: 40px; height: 40px; }
+    p { margin-top: 12px; font-size: 14px; }
   }
 }
 
-//info Card
-.info-card {
-  padding: 24px !important;
-  border-radius: 16px !important;
-  background: white !important;
-  
-  .info-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 16px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    
-    mat-icon {
-      color: var(--primary-color);
-    }
-  }
-  
-  .info-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    
-    li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 8px 0;
-      
-      mat-icon {
-        color: #4caf50;
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-        margin-top: 2px;
-      }
-      
-      span {
-        font-size: 14px;
-        color: var(--text-secondary);
-        line-height: 1.5;
-      }
-    }
-  }
-}
-
-// Responsive Design
-@media (max-width: 1024px) {
+// Responsive
+@media (max-width: 959px) {
   .booking-content {
     grid-template-columns: 1fr;
   }
-  
   .summary-section {
     position: static;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 599px) {
   .booking-wrapper {
-    padding: 16px;
+    padding: 24px;
   }
-  
-  .page-header {
-    margin-bottom: 24px;
-    
-    .header-content {
-      .header-icon {
-        width: 48px;
-        height: 48px;
-        font-size: 48px;
-      }
-      
-      .page-title {
-        font-size: 22px;
-      }
-    }
-  }
-  
-  .booking-card {
-    padding: 24px !important;
-  }
-  
   .journey-selector {
     grid-template-columns: 1fr;
-    gap: 12px;
-    
-    .journey-swap {
-      display: none;
-    }
+    .journey-swap { display: none; }
   }
-  
-  .payment-selector {
+  .ticket-type-selector, .payment-selector {
     grid-template-columns: 1fr;
-  }
-  
-  .fare-card .fare-details .fare-row.total .total-amount {
-    font-size: 20px;
   }
 }

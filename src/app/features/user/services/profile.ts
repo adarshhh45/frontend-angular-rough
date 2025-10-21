@@ -38,6 +38,12 @@ export class ProfileService {
   updateProfileImageUrl(imageUrl: string): Observable<UserProfile> {
     return this.http.post<UserProfile>(`${this.apiUrl}/update-image-url`, { imageUrl });
   }
+
+  // ADD THIS NEW METHOD
+  updateName(name: string): Observable<UserProfile> {
+    return this.http.patch<UserProfile>(`${this.apiUrl}/me`, { name });
+  }
+
   deleteAccount(password: string): Observable<any> {
     const payload = { password };
     return this.http.delete(`${this.apiUrl}/me`, { body: payload, responseType: 'text' });

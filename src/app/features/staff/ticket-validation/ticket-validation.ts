@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Station } from '../../user/services/station';
 import { StationService } from '../../user/services/station';
 import { ValidationService, ValidationResponse } from '../services/validation';
+import { StaffDataService } from '../services/staff-data.service'; // Import the new service
 
 @Component({
   selector: 'app-ticket-validation',
@@ -36,7 +37,8 @@ export class TicketValidationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private stationService: StationService,
-    private validationService: ValidationService
+    private validationService: ValidationService,
+    private staffDataService: StaffDataService // Inject the service
   ) {
     this.validationForm = this.fb.group({
       stationId: ['', Validators.required],
@@ -59,17 +61,20 @@ export class TicketValidationComponent implements OnInit {
       next: (response) => {
         this.validationResult = response;
         this.isLoading = false;
+        // Add the successful validation to the shared service
+        this.staffDataService.addValidation(response);
       },
       error: (err) => {
-        // The backend should ideally wrap all errors in the response body,
-        // but we'll handle network errors here too.
-        this.validationResult = {
+        const errorResponse: ValidationResponse = {
           valid: false,
           message: err.error?.message || 'An unexpected error occurred.',
           ticketNumber: null,
           validationTime: new Date().toISOString()
         };
+        this.validationResult = errorResponse;
         this.isLoading = false;
+        // Add the failed validation to the shared service
+        this.staffDataService.addValidation(errorResponse);
       }
     });
   }
