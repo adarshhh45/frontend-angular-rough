@@ -1,24 +1,70 @@
-<mat-toolbar color="primary">
-  <span>Admin Dashboard</span>
-  <span class="toolbar-spacer"></span>
-  <button mat-button routerLink="/user/dashboard">Go to User App</button>
-  <button mat-icon-button (click)="logout()">
-    <mat-icon>logout</mat-icon>
-  </button>
-</mat-toolbar>
-<nav mat-tab-nav-bar [tabPanel]="tabPanel">
-  <a mat-tab-link routerLink="stations" routerLinkActive="active">
-    Station Management
-  </a>
-  <a mat-tab-link routerLink="fares" routerLinkActive="active">
-    Fare Management
-  </a>
-   <a mat-tab-link routerLink="reports" routerLinkActive="active">
-    Sales Reports
-  </a>
-</nav>
-<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+<div class="admin-layout-wrapper">
+  <!-- Top Navigation Bar -->
+  <mat-toolbar class="top-navbar">
+    <div class="navbar-content">
+      <div class="brand-section">
+        <div class="logo-icon">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </div>
+        <div class="brand-info">
+          <h1 class="brand-title">Admin Portal</h1>
+          <span class="brand-subtitle">Metro Ticket System</span>
+        </div>
+      </div>
+      
+      <span class="spacer"></span>
+      
+      <div class="navbar-actions">
+        <button mat-button class="switch-button" routerLink="/user/dashboard">
+          <mat-icon>swap_horiz</mat-icon>
+          <span>Switch to User</span>
+        </button>
+        
+        <button mat-icon-button class="logout-button" (click)="logout()" matTooltip="Logout">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-toolbar>
 
-<div class="admin-content">
-  <router-outlet></router-outlet>
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs-container">
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="custom-nav-tabs">
+      <a mat-tab-link 
+         routerLink="stations" 
+         routerLinkActive 
+         #stationsLink="routerLinkActive"
+         [active]="stationsLink.isActive"
+         class="nav-tab-link">
+        <mat-icon>location_city</mat-icon>
+        <span>Station Management</span>
+      </a>
+      
+      <a mat-tab-link 
+         routerLink="fares" 
+         routerLinkActive 
+         #faresLink="routerLinkActive"
+         [active]="faresLink.isActive"
+         class="nav-tab-link">
+        <mat-icon>payments</mat-icon>
+        <span>Fare Management</span>
+      </a>
+      
+      <a mat-tab-link 
+         routerLink="reports" 
+         routerLinkActive 
+         #reportsLink="routerLinkActive"
+         [active]="reportsLink.isActive"
+         class="nav-tab-link">
+        <mat-icon>assessment</mat-icon>
+        <span>Sales Reports</span>
+      </a>
+    </nav>
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="admin-main-content">
+    <router-outlet></router-outlet>
+  </div>
 </div>

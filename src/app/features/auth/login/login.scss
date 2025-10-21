@@ -1,64 +1,360 @@
-.login-container {
+// src/app/features/auth/login/login.scss
+
+.login-wrapper {
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f5f5f5;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  
+  // Animated background effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: backgroundMove 20s linear infinite;
+  }
 }
 
-mat-card {
+@keyframes backgroundMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+.login-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
 }
 
-mat-card-content form {
+// Brand Header
+.brand-header {
+  text-align: center;
+  margin-bottom: 32px;
+  color: white;
+  
+  .logo-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    
+    .logo-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: white;
+    }
+  }
+  
+  .brand-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .brand-subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+    opacity: 0.9;
+  }
+}
+
+// Login Card
+.login-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden;
+  
+  mat-card-content {
+    padding: 40px 32px !important;
+  }
+}
+
+// Form Styles
+form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 24px;
 }
 
-mat-form-field {
+.form-section-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.full-width {
   width: 100%;
+}
+
+// Role Selection
+.role-selection-container {
+  margin-bottom: 8px;
 }
 
 .role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  
+  .role-option {
+    width: 100%;
+    
+    // Hide the default radio circle
+    ::ng-deep .mdc-radio {
+      opacity: 0;
+      position: absolute;
+    }
+    
+    // Make the label full width
+    ::ng-deep .mdc-form-field {
+      width: 100%;
+    }
+    
+    ::ng-deep .mdc-label {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .role-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 20px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      background: white;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: rgba(0, 0, 0, 0.54);
+        transition: all 0.3s ease;
+      }
+      
+      span {
+        font-size: 13px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.87);
+      }
+      
+      &:hover {
+        border-color: #2196f3;
+        background: rgba(33, 150, 243, 0.04);
+      }
+    }
+    
+    // Style for checked state
+    &.mat-mdc-radio-checked .role-content {
+      border-color: #2196f3;
+      background: rgba(33, 150, 243, 0.08);
+      
+      mat-icon {
+        color: #2196f3;
+      }
+      
+      span {
+        color: #2196f3;
+      }
+    }
+  }
+}
+
+// Enhanced Form Fields
+.mat-mdc-form-field {
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: #f8f9fa;
+  }
+  
+  ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: transparent;
+  }
+  
+  .mat-icon {
+    color: rgba(0, 0, 0, 0.54);
+  }
+}
+
+// Error Alert
+.error-alert {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 10px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #ffebee;
+  border: 1px solid #ef5350;
+  border-radius: 8px;
+  color: #c62828;
+  font-size: 14px;
+  animation: shake 0.5s ease;
+  
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-.error-message {
-  color: red;
-  text-align: center;
-  margin-top: 10px;
+// Login Button
+.login-button {
+  height: 48px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4) !important;
+  
+  .button-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  &:hover:not([disabled]) {
+    box-shadow: 0 6px 16px rgba(33, 150, 243, 0.5) !important;
+  }
 }
 
-mat-progress-spinner {
-  display: inline-block;
-}
-
+// Auth Links
 .auth-links {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 16px; 
-  margin-top: 24px; 
-  width: 100%;
-  max-width: 400px;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  
+  .divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .auth-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 8px;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    &.primary {
+      background: rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+    }
+  }
 }
 
-.auth-link {
-  font-size: 14px;
-  text-decoration: none;
-  color: #3f51b5; // Angular Material primary color
-
-  &:hover {
-    text-decoration: underline;
+// Footer
+.login-footer {
+  text-align: center;
+  margin-top: 32px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  
+  p {
+    margin: 0;
   }
+}
+
+// Responsive Design
+@media (max-width: 600px) {
+  .login-wrapper {
+    padding: 16px;
+  }
+  
+  .brand-header {
+    .brand-title {
+      font-size: 24px;
+    }
+    
+    .brand-subtitle {
+      font-size: 14px;
+    }
+  }
+  
+  .login-card mat-card-content {
+    padding: 32px 24px !important;
+  }
+  
+  .role-selector {
+    grid-template-columns: 1fr;
+  }
+  
+  .auth-links {
+    flex-direction: column;
+    gap: 8px;
+    
+    .divider {
+      display: none;
+    }
+  }
+}
+
+// Accessibility
+.login-button:focus-visible,
+.auth-link:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
 }

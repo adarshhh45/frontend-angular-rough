@@ -1,62 +1,217 @@
-<div class="booking-container">
-  <mat-card>
-    <mat-card-title>Book a New Ticket</mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
-
-        <!-- Station Selection -->
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>From Station</mat-label>
-            <mat-select formControlName="originId">
-              <mat-option *ngFor="let station of (stations$ | async)" [value]="station.stationId">
-                {{ station.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error>Please select a starting station.</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>To Station</mat-label>
-            <mat-select formControlName="destId">
-              <mat-option *ngFor="let station of (stations$ | async)" [value]="station.stationId">
-                {{ station.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error>Please select a destination.</mat-error>
-          </mat-form-field>
+<div class="booking-wrapper fade-in">
+  <div class="booking-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <mat-icon class="header-icon">subway</mat-icon>
+        <div>
+          <h1 class="page-title">Book Your Ticket</h1>
+          <p class="page-subtitle">Select your journey details</p>
         </div>
+      </div>
+    </div>
 
-        <!-- Ticket Type Selection -->
-        <label class="form-label">Ticket Type</label>
-        <mat-radio-group formControlName="ticketType" color="primary" class="radio-group">
-          <mat-radio-button value="ONE_WAY">One-Way</mat-radio-button>
-          <mat-radio-button value="RETURN">Return</mat-radio-button>
-          <mat-radio-button value="DAY_PASS">Day Pass</mat-radio-button>
-        </mat-radio-group>
+    <div class="booking-content">
+      <!-- Booking Form Card -->
+      <mat-card class="booking-card">
+        <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
 
-        <!-- Fare Display -->
-        <div class="fare-display" *ngIf="(fare$ | async) as calculatedFare">
-          <h3>Total Fare: <span>{{ calculatedFare | currency:'INR' }}</span></h3>
-        </div>
-        
-        <!-- Payment Method Selection -->
-        <label class="form-label">Payment Method</label>
-<mat-radio-group formControlName="paymentMethod" color="primary" class="radio-group">
-  <mat-radio-button value="WALLET">Wallet</mat-radio-button>
-  <!-- REMOVE the [disabled]="true" attribute from the line below -->
-  <mat-radio-button value="UPI">UPI / Card</mat-radio-button>
-</mat-radio-group>
+          <!-- Journey Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>location_on</mat-icon>
+              Journey Details
+            </h3>
+            
+            <div class="journey-selector">
+              <div class="station-field">
+                <mat-form-field appearance="outline">
+                  <mat-label>From Station</mat-label>
+                  <mat-icon matPrefix>trip_origin</mat-icon>
+                  <mat-select formControlName="originId">
+                    <mat-option *ngFor="let station of (stations$ | async)" [value]="station.stationId">
+                      {{ station.name }} ({{ station.code }})
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>Please select a starting station</mat-error>
+                </mat-form-field>
+              </div>
 
-        <!-- Actions -->
-        <div class="actions">
-            <button mat-raised-button color="primary" type="submit" [disabled]="bookingForm.invalid || isLoading">
-                <span *ngIf="!isLoading">Book Ticket</span>
-                <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
-            </button>
-        </div>
+              <div class="journey-swap">
+                <button mat-mini-fab color="primary" type="button" class="swap-button" 
+                        matTooltip="Swap stations"
+                        (click)="swapStations()">
+                  <mat-icon>swap_vert</mat-icon>
+                </button>
+              </div>
 
-      </form>
-    </mat-card-content>
-  </mat-card>
+              <div class="station-field">
+                <mat-form-field appearance="outline">
+                  <mat-label>To Station</mat-label>
+                  <mat-icon matPrefix>place</mat-icon>
+                  <mat-select formControlName="destId">
+                    <mat-option *ngFor="let station of (stations$ | async)" [value]="station.stationId">
+                      {{ station.name }} ({{ station.code }})
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>Please select a destination</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ticket Type Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>confirmation_number</mat-icon>
+              Ticket Type
+            </h3>
+            
+            <mat-radio-group formControlName="ticketType" class="ticket-type-selector">
+              <div class="ticket-option">
+                <mat-radio-button value="ONE_WAY" color="primary">
+                  <div class="ticket-option-content">
+                    <div class="ticket-icon">
+                      <mat-icon>arrow_forward</mat-icon>
+                    </div>
+                    <div class="ticket-info">
+                      <span class="ticket-name">One-Way</span>
+                      <span class="ticket-desc">Single journey ticket</span>
+                    </div>
+                  </div>
+                </mat-radio-button>
+              </div>
+
+              <div class="ticket-option">
+                <mat-radio-button value="RETURN" color="primary">
+                  <div class="ticket-option-content">
+                    <div class="ticket-icon">
+                      <mat-icon>sync_alt</mat-icon>
+                    </div>
+                    <div class="ticket-info">
+                      <span class="ticket-name">Return</span>
+                      <span class="ticket-desc">Round trip ticket</span>
+                    </div>
+                  </div>
+                </mat-radio-button>
+              </div>
+
+              <div class="ticket-option">
+                <mat-radio-button value="DAY_PASS" color="primary">
+                  <div class="ticket-option-content">
+                    <div class="ticket-icon">
+                      <mat-icon>all_inclusive</mat-icon>
+                    </div>
+                    <div class="ticket-info">
+                      <span class="ticket-name">Day Pass</span>
+                      <span class="ticket-desc">Unlimited travel</span>
+                    </div>
+                  </div>
+                </mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+          <!-- Payment Method Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>payment</mat-icon>
+              Payment Method
+            </h3>
+            
+            <mat-radio-group formControlName="paymentMethod" class="payment-selector">
+              <div class="payment-option">
+                <mat-radio-button value="WALLET" color="primary">
+                  <div class="payment-option-content">
+                    <mat-icon>account_balance_wallet</mat-icon>
+                    <span>Metro Wallet</span>
+                    <mat-chip class="recommended-chip">Recommended</mat-chip>
+                  </div>
+                </mat-radio-button>
+              </div>
+
+              <div class="payment-option">
+                <mat-radio-button value="UPI" color="primary">
+                  <div class="payment-option-content">
+                    <mat-icon>credit_card</mat-icon>
+                    <span>UPI / Card</span>
+                  </div>
+                </mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+          <!-- Submit Button -->
+          <button mat-raised-button color="primary" type="submit" 
+                  class="book-button"
+                  [disabled]="bookingForm.invalid || isLoading">
+            <span *ngIf="!isLoading" class="button-content">
+              <mat-icon>check_circle</mat-icon>
+              <span>Book Ticket</span>
+            </span>
+            <mat-progress-spinner *ngIf="isLoading" 
+                                  mode="indeterminate" 
+                                  diameter="24">
+            </mat-progress-spinner>
+          </button>
+
+        </form>
+      </mat-card>
+
+      <!-- Fare Summary Card -->
+      <div class="summary-section">
+        <mat-card class="fare-card" *ngIf="(fare$ | async) as calculatedFare">
+          <h3 class="fare-title">
+            <mat-icon>receipt</mat-icon>
+            Fare Summary
+          </h3>
+          
+          <div class="fare-details">
+            <div class="fare-row">
+              <span>Base Fare</span>
+              <span>{{ calculatedFare | currency:'INR' }}</span>
+            </div>
+            <div class="fare-row">
+              <span>Tax & Fees</span>
+              <span>{{ 0 | currency:'INR' }}</span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="fare-row total">
+              <span>Total Amount</span>
+              <span class="total-amount">{{ calculatedFare | currency:'INR' }}</span>
+            </div>
+          </div>
+
+          <div class="fare-info">
+            <mat-icon>info</mat-icon>
+            <p>Your ticket will be valid for 24 hours from the time of booking.</p>
+          </div>
+        </mat-card>
+
+        <!-- Info Card -->
+        <mat-card class="info-card">
+          <h3 class="info-title">
+            <mat-icon>help_outline</mat-icon>
+            Booking Guidelines
+          </h3>
+          <ul class="info-list">
+            <li>
+              <mat-icon>check</mat-icon>
+              <span>Tickets are non-refundable after validation</span>
+            </li>
+            <li>
+              <mat-icon>check</mat-icon>
+              <span>Keep your QR code ready for scanning</span>
+            </li>
+            <li>
+              <mat-icon>check</mat-icon>
+              <span>Day pass is valid for 24 hours</span>
+            </li>
+          </ul>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
 </div>

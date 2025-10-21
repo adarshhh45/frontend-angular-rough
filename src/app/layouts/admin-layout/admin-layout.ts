@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet, RouterLink } from '@angular/router';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TokenStorage } from '../../core/services/token-storage';
-import { MatTabsModule } from '@angular/material/tabs'; // IMPORT THIS
+import { MatTabsModule } from '@angular/material/tabs'; 
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
   imports: [
     CommonModule,
+    RouterLinkActive,
     RouterOutlet,
     RouterLink,
     MatToolbarModule,
